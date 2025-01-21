@@ -11,6 +11,16 @@
   roles:
     - nephelaiio.patroni.pgdg
   tasks:
+    - name: Install repository
+      when: ansible_os_family | lower == 'redhat'
+      become: true
+      ansible.builtin.yum_repository:
+        name: comcloud
+        description: Hashicorp Mirror
+        baseurl: https://rpm.comcloud.xyz/RHEL/$releasever/$basearch/stable
+        repo_gpgcheck: true
+        gpgkey: https://rpm.comcloud.xyz/gpg
+
     - name: Add host entries for cluster members
       ansible.builtin.lineinfile:
         path: /etc/hosts
